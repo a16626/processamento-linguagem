@@ -70,7 +70,7 @@ def testar_reconhece(ps: List[str])->None:
 
 testar_reconhece(["1e1", "2.2e3", "-2.2e3", "-2.2e-3", ".1e1", "1e"])
 print('----------------------');
-testar_reconhece(["11", "223", "223", "223"])
+testar_reconhece(["11", "223", "223", "223", "1e"])
 
 
 #print(f'{tt}')
