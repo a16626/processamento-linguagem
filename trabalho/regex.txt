@@ -1,0 +1,33 @@
+d={0...9}
+S={., e, E, +, -}
+
+Possibilidades possiveis
+ded
+dedd
+d.ded
+d.de-d
+d.de+d
++d.ded
+-d.ded
+.deddd
+.dded
+d.ddde+dd
+d.ddde-dd
+
+Não Possiveis
+d
+d.
+.d
+e
+epslon
+de
+dede
+d.e
+ded.
+
+
+1.
+(- | + | epslon)(. d+ | (d+ . d+))(E | e)(+ | - | epslon)d+
+
+2.
+(- | + | epslon) d* . d+ (E | e) (+ | - | epslon) d+ 
