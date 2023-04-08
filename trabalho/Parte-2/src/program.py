@@ -5,7 +5,10 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'helpers')))
 
 # Importa a função lexer_input do módulo coinlexer
-from helpers.coinlexer import lexer_input, return_products
+from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile
+
+
+
 
 #Variaveis para interação com menu
 atual_user = 'USER'
@@ -17,7 +20,11 @@ chosen_product = None
 
 while Menu == True:
 
+<<<<<<< HEAD
     if (atual_user == 'USER' and user_comprou == False):
+=======
+    if (atual_user   == 'USER'):
+>>>>>>> 70864095597d91462d6a0b2b01d01274f37e3cad
 
         #Imprimir produtos
         if (user_string == None):
