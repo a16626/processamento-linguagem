@@ -1,0 +1,11 @@
+calcular a soma dos valores:   
+1 2 3 = soma parcial seis  IGNORADO
+
+ON 4 5 = soma parcial nove  adicionar 6 total fica em quinze  OFF  vai reiniciar   
+ON 6
+ 7
+  8 = soma parcial vinte e um  
+
+21 = vai mostrar 42  considera ainda este numero para dar oitenta e quatro  
+OFF
+12 44 00  estes são ignorados
