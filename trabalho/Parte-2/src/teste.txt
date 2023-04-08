@@ -1,0 +1,4 @@
+SUDO
+nome=twix preco=2 stock=2
+nome=candy preco=2.3 stock=40
+nome=barra preco=2.4 stock=13
