@@ -9,6 +9,7 @@ states = (
 saldo = 0
 valor_inserido = 0
 produto_user = None
+produto_preco = 0
 
 valor_moedas = {"c50": 0.50, "c5":0.05, "c20":0.20, "c10":0.10, "e1":1.00, "e2":2.00}
 
@@ -33,7 +34,7 @@ def t_USER_MOEDA(t):
     global valor_inserido
     for coin in t.value.split(','):
         if coin.strip() in valor_moedas:
-            valor_inserido = valor_moedas[coin.strip()]
+            valor_inserido += valor_moedas[coin.strip()]
             saldo += valor_moedas[coin.strip()]
     pass
 
@@ -49,6 +50,7 @@ def t_USER_DESIGNACAO(t):
         if produto["nome"] == t.value:
             produto_user = t.value
             found = True
+            produto_preco = produto["preco"]
             break
 
 #---------------------------Funções de Erro do lexer--------------------------------------
@@ -67,11 +69,15 @@ lexer = plex.lex()
 def lexer_input(user_string):
     lexer.input(user_string)
     lexer.token()
+    global valor_inserido
+    global produto_preco
 
     return {
         "valor_inserido": valor_inserido,
         "saldo": saldo,
-        "produto_escolhido": produto_user
+        "produto_escolhido": produto_user,
+        "preco_produto": produto_preco
     }
+    valor_inserido = 0
 
 #print(lexer_input("QUANTIA c20, c50, e1, e2"))
