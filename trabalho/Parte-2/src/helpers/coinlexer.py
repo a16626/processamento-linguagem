@@ -38,6 +38,10 @@ def t_USER_MOEDA(t):
             saldo += valor_moedas[coin.strip()]
     pass
 
+def t_USER_QUANTIA(t):
+    r"QUANTIA(\s)"
+    pass
+
 def t_USER_PRODUTO(t):
     r"PRODUTO="
     pass
@@ -45,6 +49,7 @@ def t_USER_PRODUTO(t):
 def t_USER_DESIGNACAO(t):
     r"[a-z]+"
     global produto_user
+    global produto_preco
     found = False
     for produto in produtos:
         if produto["nome"] == t.value:
@@ -76,7 +81,7 @@ def lexer_input(user_string):
         "valor_inserido": valor_inserido,
         "saldo": saldo,
         "produto_escolhido": produto_user,
-        "preco_produto": produto_preco
+        "produto_preco": produto_preco
     }
     valor_inserido = 0
 
