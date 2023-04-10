@@ -8,8 +8,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'helpers
 from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile
 
 
-
-
 #Variaveis para interação com menu
 atual_user = 'USER'
 Menu = True
@@ -20,12 +18,7 @@ chosen_product = None
 
 while Menu == True:
 
-<<<<<<< HEAD
     if (atual_user == 'USER' and user_comprou == False):
-=======
-    if (atual_user   == 'USER'):
->>>>>>> 70864095597d91462d6a0b2b01d01274f37e3cad
-
         #Imprimir produtos
         if (user_string == None):
             print('----Produtos-----------------------------------------------------------')
@@ -39,10 +32,21 @@ while Menu == True:
             print('-----------------------------------------------------------------------')
 
             #Inserir Moedas
+            print("Insira a quantia:");
+
             user_string = input()
             chosen_product = lexer_input(user_string)
 
-            print (f'> Valor inserido: €{chosen_product["valor_inserido"]} (saldo: {chosen_product["saldo"]})')
+            while chosen_product["ERROR"] == 'error' or chosen_product["saldo"] <= 0:
+
+                if chosen_product["saldo"] <= 0:
+                    print("Moeda invalida!")
+
+                user_string = input()
+                chosen_product = lexer_input(user_string)
+
+            print (f'> Valor inserido: €{chosen_product["valor_inserido"]}0 (saldo:{chosen_product["saldo"]}0)')
+
 
             #Escolher Produto
             print("Escolha um produto:")
@@ -50,11 +54,17 @@ while Menu == True:
             user_string = input()
             chosen_product = lexer_input(user_string)
 
+            while chosen_product["ERROR"] == "error":
+
+                print("Produto não encontrado!")
+                user_string = input()
+                chosen_product = lexer_input(user_string)
+
             #Se o valor inserido for menor que o valor do produto
             while (chosen_product["saldo"] < chosen_product["produto_preco"]):
 
                 #Inserir Moedas
-                print(f'> Quantia insuficiente. faltam: €{chosen_product["produto_preco"] - chosen_product["saldo"]}')
+                print(f'> Quantia insuficiente. faltam: €{chosen_product["produto_preco"] - chosen_product["saldo"]}0')
                 user_string = input()
                 chosen_product = lexer_input(user_string)
 

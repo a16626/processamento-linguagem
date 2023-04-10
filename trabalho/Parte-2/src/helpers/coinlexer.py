@@ -7,6 +7,8 @@ states = (
             ('USER', 'exclusive'),('ADMIN', 'exclusive')
         )
 
+ERROR = None
+aux = False
 saldo = 0
 valor_inserido = 0
 produto_user = None
@@ -17,6 +19,8 @@ temp_stock = None
 produto_preco = 0
 
 valor_moedas = {"c50": 0.50, "c5":0.05, "c20":0.20, "c10":0.10, "e1":1.00, "e2":2.00}
+
+moedeiro = { "c50": 5, "c5":5, "c20":5, "c10":5, "e1":5, "e2":5 }
 
 #--------------------------------PRODUTOS--------------------------------------------------
 produtos = [{"nome":"twix","preco":1,"stock":20 }, {"nome":"mars","preco":1.2,"stock":20}]
@@ -47,12 +51,6 @@ def t_ADMIN_ADICIONAR(t):
     produtos.append(novo_produto)
 
 
-
-
-
-
-
-
 #def t_ADMIN_ADICIONAR(t):
  #   r"nome=([a-z]+)\s+preco=([\d]+(\.\d+)?)\s+stock=(\d+)"
   #  for produto in produtos:
@@ -73,60 +71,85 @@ def t_ADMIN_error(t):
 #-------------------------------Funções do lexer(USER)-------------------------------------------
 def t_QUANTIA(t):
     r"QUANTIA(\s)"
+    global aux
+    aux = True
     t.lexer.begin("USER")
-    pass
 
 def t_USER_MOEDA(t):
     r"((c50|c20|c5|c10|e1|e2)(,?)(\s)*)+"
     global saldo
     global string
     global valor_inserido
-    for coin in t.value.split(','):
-        if coin.strip() in valor_moedas:
-            valor_inserido += valor_moedas[coin.strip()]
-            saldo += valor_moedas[coin.strip()]
-    pass
+    global aux
+    global ERROR
+    if aux is True:
+        for coin in t.value.split(','):
+            if coin.strip() in valor_moedas:
+                valor_inserido += valor_moedas[coin.strip()]
+                saldo += valor_moedas[coin.strip()]
+                ERROR = ""
+    else:
+        ERROR = 'error'
+    aux = False
 
 def t_USER_QUANTIA(t):
     r"QUANTIA(\s)"
+    global aux
+    aux = True
     pass
 
 def t_USER_PRODUTO(t):
     r"PRODUTO="
+    global aux
+    aux = True
     pass
 
 def t_USER_DESIGNACAO(t):
     r"[a-z]+"
     global produto_user
     global produto_preco
+    global ERROR
+    global aux
     found = False
-    for produto in produtos:
-        if produto["nome"] == t.value:
-            produto_user = t.value
-            found = True
-            produto_preco = produto["preco"]
-            break
 
-    if not found:
-        t.type = "error"
-        t.value = f"Product not found: {t.value}"
-        return t
+    if aux is True:
+        for produto in produtos:
+            if produto["nome"] == t.value:
+                produto_user = t.value
+                found = True
+                produto_preco = produto["preco"]
+                ERROR = ""
+                break
+
+            if not found:
+                ERROR = "error"
+                #t.type = "error"
+                #t.value = f"Product not found: {t.value
+    else:
+        ERROR = "error"
+    aux = False
 
 #---------------------------Funções de Erro do lexer--------------------------------------
 def t_USER_error(t):
     print(f"Token not recognized at USER state: {t.value[0]}")
+    global ERROR
+    global saldo
+    global valor_inserido
+    saldo = 0
+    valor_inserido = 0
+    ERROR = t.type
     t.lexer.skip(1)
 
 def t_error(t):
     print(f"Token invalido {t.value[0]}")
+    global ERROR
+    ERROR = t.type;
     t.lexer.skip(1)
 
 def ReadFile(filename):
     with open(filename, "r") as fh:
         contents = fh.read()
     return contents
-
-
 
 #--------------------------Instância do lexer---------------------------------------------
 lexer = plex.lex()
@@ -136,13 +159,13 @@ def lexer_input(user_string):
     lexer.token()
     global valor_inserido
     global produto_preco
+    global ERROR
 
     return {
         "valor_inserido": valor_inserido,
         "saldo": saldo,
         "produto_escolhido": produto_user,
-        "produto_preco": produto_preco
+        "produto_preco": produto_preco,
+        "ERROR": ERROR
     }
     valor_inserido = 0
-
-#print(lexer_input("QUANTIA c20, c50, e1, e2"))
