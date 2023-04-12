@@ -5,8 +5,10 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'helpers')))
 
 # Importa a função lexer_input do módulo coinlexer
-from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile
+from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile, moedeiro
 
+lexer_input(ReadFile("teste.txt"))
+lexer.token()
 
 #Variaveis para interação com menu
 atual_user = 'USER'
@@ -26,13 +28,15 @@ while Menu == True:
                 print(f'Nome: {product["nome"]} | Preço: {product["preco"]} | Stock: {product["stock"]}')
 
             print('-----------------------------------------------------------------------')
-            print("-> Moedas aceites: c5, c20, c50, e1, e2")
+            print("-> Moedas3 aceites: c5, c20, c50, e1, e2")
             print("-> Para inserir dinheiro: QUANTIA + moedas. ex: QUANTIA c20, c50")
             print("-> Para escolher um produto: PRODUTO=nomeDoProduto. ex: PRODUTO=twix")
             print('-----------------------------------------------------------------------')
 
+
+
             #Inserir Moedas
-            print("Insira a quantia:");
+            print("Insira a quantia:")
 
             user_string = input()
             chosen_product = lexer_input(user_string)
@@ -69,7 +73,7 @@ while Menu == True:
                 chosen_product = lexer_input(user_string)
 
             if (chosen_product["saldo"] > chosen_product["produto_preco"]):
-                print(f'> Troco: €{chosen_product["saldo"] - chosen_product["produto_preco"]}')
+                print("> Troco: {:.2f}€".format(chosen_product["saldo"]-chosen_product["produto_preco"]))
                 user_comprou = True
             else:
                 user_comprou = True

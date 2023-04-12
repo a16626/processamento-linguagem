@@ -1,7 +1,7 @@
 import ply.lex as plex
 import re
 
-tokens = ("PRODUTO", "QUANTIA", "CANCELAR",  "MOEDA", "EQUALS", "error", "END", "DESIGNACAO", "SUDO", "ADICIONAR")
+tokens = ("PRODUTO", "QUANTIA", "CANCELAR",  "MOEDA", "EQUALS", "error", "END", "DESIGNACAO", "SUDO", "ADICIONAR","NL")
 
 states = (
             ('USER', 'exclusive'),('ADMIN', 'exclusive')
@@ -18,10 +18,9 @@ temp_stock = None
 
 produto_preco = 0
 
-valor_moedas = {"c50": 0.50, "c5":0.05, "c20":0.20, "c10":0.10, "e1":1.00, "e2":2.00}
+valor_moedas = {"c50": 0.50,"c5":0.05,"c20":0.20, "c10":0.10,"e1":1.00,"e2":2.00}
 
-moedeiro = { "c50": 5, "c5":5, "c20":5, "c10":5, "e1":5, "e2":5 }
-
+moedeiro = [{"nome":"c50","c50": 0.50, "stock":0}, {"nome":"c5","c5":0.05, "stock":0}, {"nome":"c20","c20":0.20, "stock":0}, {"nome":"c10","c10":0.10, "stock":0}, {"nome":"e1","e1":1.00, "stock":0}, {"nome":"e2","e2":2.00,"stock":0}]
 #--------------------------------PRODUTOS--------------------------------------------------
 produtos = [{"nome":"twix","preco":1,"stock":20 }, {"nome":"mars","preco":1.2,"stock":20}]
 
@@ -48,7 +47,31 @@ def t_ADMIN_ADICIONAR(t):
             return t
 
     novo_produto = {"nome": nome, "preco": preco, "stock": stock}
-    produtos.append(novo_produto)
+    produtos.append(novo_produto)   
+
+
+def t_ADMIN_CANCELAR(t):
+    r"CANCELAR"
+    t.lexer.begin("USER")
+    pass
+
+def t_ADMIN_MOEDEIRO(t):
+    r"(c5|c10|c20|c50|e1|e2)=[0-9]+"
+    parts=t.value.split("=")
+
+    moeda = parts[0]
+    stock= int(parts[1])
+
+    for moedeiroT in moedeiro:
+        if moedeiroT["nome"] == moeda:
+            moedeiroT["stock"]=stock
+
+
+def t_ADMIN_NL(t):
+    r"\n"
+    pass
+
+
 
 
 #def t_ADMIN_ADICIONAR(t):
@@ -91,6 +114,12 @@ def t_USER_MOEDA(t):
     else:
         ERROR = 'error'
     aux = False
+
+def t_USER_CANCELAR(t):
+    r"CANCELAR"
+    t.lexer.begin("INITIAL")
+    pass
+
 
 def t_USER_QUANTIA(t):
     r"QUANTIA(\s)"
