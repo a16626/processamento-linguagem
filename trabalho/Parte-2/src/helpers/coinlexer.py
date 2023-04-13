@@ -1,5 +1,6 @@
 import ply.lex as plex
 import re
+from decimal import Decimal
 
 tokens = ("PRODUTO", "QUANTIA", "CANCELAR",  "MOEDA", "EQUALS", "error", "END", "DESIGNACAO", "SUDO", "ADICIONAR","NL")
 
@@ -20,7 +21,7 @@ produto_preco = 0
 
 valor_moedas = {"c50": 0.50,"c5":0.05,"c20":0.20, "c10":0.10,"e1":1.00,"e2":2.00}
 
-moedeiro = [{"nome":"c50","c50": 0.50, "stock":0}, {"nome":"c5","c5":0.05, "stock":0}, {"nome":"c20","c20":0.20, "stock":0}, {"nome":"c10","c10":0.10, "stock":0}, {"nome":"e1","e1":1.00, "stock":0}, {"nome":"e2","e2":2.00,"stock":0}]
+moedeiro = [{"nome":"c50","valor": 0.50, "stock":0}, {"nome":"c5","valor":0.05, "stock":0}, {"nome":"c20","valor":0.20, "stock":0}, {"nome":"c10","valor":0.10, "stock":0}, {"nome":"e1","valor":1.00, "stock":0}, {"nome":"e2","valor":2.00,"stock":0}]
 #--------------------------------PRODUTOS--------------------------------------------------
 produtos = [{"nome":"twix","preco":1,"stock":20 }, {"nome":"mars","preco":1.2,"stock":20}]
 
@@ -47,7 +48,7 @@ def t_ADMIN_ADICIONAR(t):
             return t
 
     novo_produto = {"nome": nome, "preco": preco, "stock": stock}
-    produtos.append(novo_produto)   
+    produtos.append(novo_produto)
 
 
 def t_ADMIN_CANCELAR(t):
@@ -175,12 +176,57 @@ def t_error(t):
     ERROR = t.type;
     t.lexer.skip(1)
 
+
+#--------------------------Funções para o administrador----------------------------------
 def ReadFile(filename):
     with open(filename, "r") as fh:
         contents = fh.read()
     return contents
 
-#--------------------------Instância do lexer---------------------------------------------
+
+#--------------------------Função para o moedeiro----------------------------------------
+
+def troco(valor_troco):
+
+    count = 0
+    maior_moeda = 0
+    moeda_index = 0
+    nome_moeda = ''
+    moedas = []
+    moedas_dic = None
+
+    while valor_troco != 0:
+        for moeda in moedeiro:
+            if (moeda["valor"] <= valor_troco and moeda["stock"] > 0):
+                if (moeda["valor"] > maior_moeda):
+                    maior_moeda = moeda["valor"]
+                    nome_moeda = moeda["nome"]
+
+        valor_troco = float("{:.2f}".format(valor_troco)) - float("{:.2f}".format(maior_moeda))
+        count = count + maior_moeda
+        maior_moeda = 0
+        moedas.append(nome_moeda)
+
+
+    #Contar numero de moedas
+    moedas_dic ={i:moedas.count(i) for i in moedas}
+
+
+    #retirar moeda que foi devolvida como trodo
+    for moeda_s in moedas:
+        for moeda in moedeiro:
+            if moeda_s == moeda["nome"]:
+                moeda["stock"] = moeda["stock"] - 1
+
+    #print(moedas_dic)
+    #print(moedas_dic)
+    return moedas_dic
+
+
+
+
+
+#--------------------------Instância do lexer--------------------------------------------
 lexer = plex.lex()
 
 def lexer_input(user_string):

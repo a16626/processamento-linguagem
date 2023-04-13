@@ -5,7 +5,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'helpers')))
 
 # Importa a função lexer_input do módulo coinlexer
-from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile, moedeiro
+from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile, moedeiro, troco
 
 lexer_input(ReadFile("teste.txt"))
 lexer.token()
@@ -73,8 +73,15 @@ while Menu == True:
                 chosen_product = lexer_input(user_string)
 
             if (chosen_product["saldo"] > chosen_product["produto_preco"]):
+
+                #Retirar moedas do moedeiro
+                moedas = troco(chosen_product["saldo"]-chosen_product["produto_preco"])
+
                 print("> Troco: {:.2f}€".format(chosen_product["saldo"]-chosen_product["produto_preco"]))
-                user_comprou = True
+
+                for key, value in moedas.items():
+                    print(f"{value} moeda de {key}")
+
             else:
                 user_comprou = True
         Menu = False
