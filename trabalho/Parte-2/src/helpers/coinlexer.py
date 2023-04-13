@@ -16,6 +16,7 @@ produto_user = None
 temp_nome = None
 temp_preco = None
 temp_stock = None
+moedas_adicionadas = []
 
 produto_preco = 0
 
@@ -106,19 +107,37 @@ def t_USER_MOEDA(t):
     global valor_inserido
     global aux
     global ERROR
+    global moedas_adicionadas
     if aux is True:
         for coin in t.value.split(','):
             if coin.strip() in valor_moedas:
                 valor_inserido += valor_moedas[coin.strip()]
                 saldo += valor_moedas[coin.strip()]
                 ERROR = ""
+                moedas_adicionadas.append(valor_moedas[coin.strip()])
     else:
         ERROR = 'error'
     aux = False
 
+    #print(moedas_adicionadas)
+
+    for moeda in moedas_adicionadas:
+        for moeda_s in moedeiro:
+            if (moeda == moeda_s["valor"]):
+                moeda_s["stock"] = moeda_s["stock"] + 1
+
+    print(moedeiro)
+
 def t_USER_CANCELAR(t):
     r"CANCELAR"
     t.lexer.begin("INITIAL")
+
+    for moeda in moedas_adicionadas:
+        for moeda_s in moedeiro:
+            if (moeda == moeda_s["valor"]):
+                moeda_s["stock"] = moeda_s["stock"] - 1
+
+    #print(moedeiro)
     pass
 
 
