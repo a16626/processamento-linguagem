@@ -206,17 +206,14 @@ def troco(valor_troco):
         count = count + maior_moeda
         maior_moeda = 0
         moedas.append(nome_moeda)
+        for moeda in moedeiro:
+            if (moeda["nome"] == nome_moeda):
+                moeda["stock"] = moeda["stock"] - 1
 
 
     #Contar numero de moedas
     moedas_dic ={i:moedas.count(i) for i in moedas}
 
-
-    #retirar moeda que foi devolvida como trodo
-    for moeda_s in moedas:
-        for moeda in moedeiro:
-            if moeda_s == moeda["nome"]:
-                moeda["stock"] = moeda["stock"] - 1
 
     #print(moedas_dic)
     #print(moedas_dic)
