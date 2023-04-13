@@ -16,6 +16,7 @@ produto_user = None
 temp_nome = None
 temp_preco = None
 temp_stock = None
+produto_admin = None
 moedas_adicionadas = []
 
 produto_preco = 0
@@ -37,7 +38,7 @@ def t_SUDO(t):
 
 def t_ADMIN_ADICIONAR(t):
     r"nome=([a-z]+)\s+preco=([\d]+(\.\d+)?)\s+stock=(\d+)(\n|$)"
-
+    global produto_admin
     parts = t.value.split()
 
     nome = parts[0].split('=')[1]
@@ -50,6 +51,7 @@ def t_ADMIN_ADICIONAR(t):
 
     novo_produto = {"nome": nome, "preco": preco, "stock": stock}
     produtos.append(novo_produto)
+    produto_admin = novo_produto
 
 
 def t_ADMIN_CANCELAR(t):
@@ -72,22 +74,6 @@ def t_ADMIN_MOEDEIRO(t):
 def t_ADMIN_NL(t):
     r"\n"
     pass
-
-
-
-
-#def t_ADMIN_ADICIONAR(t):
- #   r"nome=([a-z]+)\s+preco=([\d]+(\.\d+)?)\s+stock=(\d+)"
-  #  for produto in produtos:
-   #     if(produto["nome"] == t.value):
-    #        return t
-     #   else:
-      #      nome = t.lexer.lexmatch.group(1)
-       #     preco = float(t.lexer.lexmatch.group(2))
-        #    stock = int(t.lexer.lexmatch.group(4))
-         #   print(f"{nome} {preco} {stock}")
-          #  novo_produto = {"nome": nome, "preco": preco, "stock": stock}
-           # produtos.append(novo_produto)
 
 def t_ADMIN_error(t):
     print(f"Token not recognized at ADMIN state: {t.value[0]}")
@@ -139,6 +125,10 @@ def t_USER_CANCELAR(t):
 
     #print(moedeiro)
     pass
+
+def t_USER_SUDO(t):
+    r"SUDO"
+    t.lexer.begin("ADMIN")
 
 
 def t_USER_QUANTIA(t):
@@ -251,12 +241,14 @@ def lexer_input(user_string):
     global valor_inserido
     global produto_preco
     global ERROR
+    global produto_admin
 
     return {
         "valor_inserido": valor_inserido,
         "saldo": saldo,
         "produto_escolhido": produto_user,
         "produto_preco": produto_preco,
-        "ERROR": ERROR
+        "ERROR": ERROR,
+        "admin": produto_admin
     }
     valor_inserido = 0
