@@ -112,6 +112,8 @@ def t_USER_MOEDA(t):
             if (moeda == moeda_s["valor"]):
                 moeda_s["stock"] = moeda_s["stock"] + 1
 
+    moedas_adicionadas =[]
+
     print(moedeiro)
 
 def t_USER_CANCELAR(t):
@@ -191,6 +193,15 @@ def ReadFile(filename):
     with open(filename, "r") as fh:
         contents = fh.read()
     return contents
+def WriteFile(filename):
+    file1 = open(filename, "w")
+
+
+    for Moedas in moedeiro:
+        file1.write("%s=%d\n" % (Moedas["nome"],Moedas["stock"]))
+    file1.write("CANCELAR")
+    
+    
 
 
 #--------------------------Função para o moedeiro----------------------------------------

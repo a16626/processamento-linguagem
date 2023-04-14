@@ -5,9 +5,11 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'helpers')))
 
 # Importa a função lexer_input do módulo coinlexer
-from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile, moedeiro, troco
+from helpers.coinlexer import lexer_input, return_products, lexer, ReadFile, moedeiro, troco, WriteFile
 
-lexer_input(ReadFile("teste.txt"))
+lexer_input(ReadFile("produtos.txt"))
+lexer.token()
+lexer_input(ReadFile("moedas.txt"))
 lexer.token()
 
 #Variaveis para interação com menu
@@ -104,6 +106,11 @@ while Menu == True:
                 print(f"{key}: {value}")
         else:
             print("Produto não adicionado!ERROR!")
+
+
+    WriteFile("moedas.txt")
+
+    
 
 
 
